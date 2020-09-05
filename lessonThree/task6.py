@@ -3,7 +3,6 @@ print('Решение шестого задания')
 
 def int_func(low_str: str):
     result = low_str.capitalize()
-    # print(f'Результат - слово с прописной первой буквой: {result}')
     return result
 
 
@@ -15,8 +14,6 @@ print('Окей, идём дальше! Теперь нужно ввести с�
 print('Каждое слово должно состоять из латинских букв в нижнем регистре: ')
 low_string = input()
 low_list = low_string.split(' ')
-# upper_first_letter_string = map(int_func, low_list)
-# print(upper_first_letter_string)
 print('Результат: ', end='')
 for word in list(map(int_func, low_list)):
     print(word, end=' ')
