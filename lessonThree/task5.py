@@ -1,7 +1,7 @@
 print('Решение пятого задания')
 print('Программа считает сумму введенных чисел, введенных через пробел.')
-print('Если при вводе чисел вы вместо числа укажете символ "Q", ', end='')
-print('то программа будет завершена и будет выведена сумма чисел до ввода "Q"')
+print('Если при вводе чисел вы вместо числа укажете символ "Q" или "q", ', end='')
+print('то программа будет завершена и будет выведена сумма чисел до ввода "Q" или "q"')
 
 
 def sum_num_str(num_string):
@@ -9,7 +9,7 @@ def sum_num_str(num_string):
     summa = 0
     final = False
     for el in range(len(num_list)):
-        if num_list[el] == 'Q':
+        if num_list[el] == 'Q' or num_list[el] == 'q':
             final = True
             break
         else:
