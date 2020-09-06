@@ -29,9 +29,6 @@ for el in range(len(products_list)):
     product_price_list.append(products_list[el][1].get('цена'))
     product_number_list.append(products_list[el][1].get('количество'))
     product_measure_list.append(products_list[el][1].get('eд'))
-# product_name_list = list(set(product_name_list))
-# product_price_list = list(set(product_price_list))
-# product_number_list = list(set(product_number_list))
 product_measure_list = list(set(product_measure_list))
 analytics = {
     'название': product_name_list,
