@@ -20,7 +20,6 @@ except IOError:
     print('Произошла ошибка ввода-вывода на этапе чтения строк из файла.')
     with open(r'task3_errors.txt', 'w') as log_file:
         print('An IOError (input / output) occurred while reading lines from a file.', file=log_file)
-# print(f'\n {staff_dict}')
 print('\nСотрудники с зарплатой меньше 20 000 рублей: ')
 for key, value in staff_dict.items():
     if value < 20000:
