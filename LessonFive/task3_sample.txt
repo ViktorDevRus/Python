@@ -1,0 +1,8 @@
+family, salary
+Petrov, 30000
+Sidorov, 19000
+Alekseenko, 21000
+Sharapov, 15500
+Ivanov, 18300
+Gluhov, 23900
+end
