@@ -14,7 +14,7 @@ class Dress:
         self.title = title
 
     def calculation_of_tissue_consumption(self):
-        return f'Расход ткани для {self.title}: '
+        pass
 
 
 class Coat(Dress):
@@ -27,7 +27,7 @@ class Coat(Dress):
         return f'Размер у {self.title}: {self.__size}'
 
     def calculation_of_tissue_consumption(self):
-        return f'{super().calculation_of_tissue_consumption()}{round(self.__size / 6.5 + 0.5, 2)}'
+        return round(self.__size / 6.5 + 0.5, 2)
 
 
 class Suit(Dress):
@@ -40,15 +40,12 @@ class Suit(Dress):
         return f'Рост у {self.title}: {self.__height}'
 
     def calculation_of_tissue_consumption(self):
-        return f'{super().calculation_of_tissue_consumption()}{round(self.__height * 2 + 0.3, 2)}'
+        return round(self.__height * 2 + 0.3, 2)
 
 
 my_coat_size = int(input('Задайте размер вашего пальто: '))
 my_coat = Coat('Пальто', my_coat_size)
-print(my_coat.size)
-print(my_coat.calculation_of_tissue_consumption())
 
 my_suit_height = int(input('Задайте рост вашего костюма: '))
 my_suit = Suit('Костюм', my_suit_height)
-print(my_suit.height)
-print(my_suit.calculation_of_tissue_consumption())
+print(f'Расчет суммарного расхода ткани на производство одежды ({my_coat.size}; {my_suit.height}): {my_coat.calculation_of_tissue_consumption() + my_suit.calculation_of_tissue_consumption()}')
