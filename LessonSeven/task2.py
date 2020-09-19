@@ -16,6 +16,8 @@ class Dress:
     def calculation_of_tissue_consumption(self):
         pass
 
+    def __add__(self, other):
+        return self.calculation_of_tissue_consumption() + other.calculation_of_tissue_consumption()
 
 class Coat(Dress):
     def __init__(self, title: str, v: int):
@@ -48,4 +50,4 @@ my_coat = Coat('Пальто', my_coat_size)
 
 my_suit_height = int(input('Задайте рост вашего костюма: '))
 my_suit = Suit('Костюм', my_suit_height)
-print(f'Расчет суммарного расхода ткани на производство одежды ({my_coat.size}; {my_suit.height}): {my_coat.calculation_of_tissue_consumption() + my_suit.calculation_of_tissue_consumption()}')
+print(f'Расчет суммарного расхода ткани на производство одежды ({my_coat.size}; {my_suit.height}): {my_coat + my_suit}')
