@@ -41,7 +41,7 @@ class OrganicCell:
         result_str = ''
         for cell in range(self.cell_count):
             if ((cell % cell_count_in_row) == 0) and (cell > 0):
-                result_str = f'{result_str}\\n*'
+                result_str = f'{result_str}\n*'
             else:
                 result_str = f'{result_str}*'
         return f'{result_str}'
@@ -60,6 +60,8 @@ print('Умножение двух клеток: ', organic_cell_1 * organic_cel
 print('Деление двух клеток: ', organic_cell_1 / organic_cell_2)
 
 order_for_organic_cell_1 = int(input('Укажите целое число для организации ячеек для первой клетки: '))
-print(f'Организация ячеек первой клетки по рядам: {organic_cell_1.make_order(order_for_organic_cell_1)}')
+print('Организация ячеек первой клетки по рядам:')
+print(organic_cell_1.make_order(order_for_organic_cell_1))
 order_for_organic_cell_2 = int(input('Укажите целое число для организации ячеек для второй клетки: '))
-print(f'Организация ячеек второй клетки по рядам: {organic_cell_2.make_order(order_for_organic_cell_2)}')
+print(f'Организация ячеек второй клетки по рядам:')
+print(organic_cell_2.make_order(order_for_organic_cell_2))
