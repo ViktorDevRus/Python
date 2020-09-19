@@ -29,8 +29,7 @@ class OrganicCell:
         return OrganicCell(self.cell_count + other.cell_count)
 
     def __sub__(self, other):
-        return OrganicCell(self.cell_count - other.cell_count) if (
-                                                                              self.cell_count - other.cell_count) > 0 else f"Операция невыполнима: число ячеек первой клетки меньше числа ячеек второй клетки."
+        return OrganicCell(self.cell_count - other.cell_count) if (self.cell_count - other.cell_count) > 0 else f"Операция невыполнима: число ячеек первой клетки меньше числа ячеек второй клетки."
 
     def __mul__(self, other):
         return OrganicCell(self.cell_count * other.cell_count)
