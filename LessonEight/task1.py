@@ -23,7 +23,7 @@ class Date:
             Date.year = int(date_list[2])
             return Date.day, Date.month, Date.year
         except ValueError as err:
-            print(f'Неверный формат даты. Ошибка на этапе преобразования типов: {err}')
+            print(f'Неверный формат даты либо задано некорректное значение для параметра/аргумента (не число). Ошибка на этапе преобразования типов: {err}')
             return None
 
     @staticmethod
