@@ -44,6 +44,12 @@ class OfficeEquipmentWarehouse:
             'copiers': 0,
         }
 
+    def acceptance_to_warehouse(office_equipment: OfficeEquipment):
+        pass
+
+    def pass_from_warehouse(office_equipment: OfficeEquipment):
+        pass
+
 
 class OfficeEquipment:
     def __init__(self, mark: str):
@@ -128,6 +134,9 @@ print('\nПроверка копировального аппарата: ')
 first_copier.on()
 copy_document = first_copier.copy_doc(my_paper_doc)
 first_copier.off()
-office_warehouse = OfficeEquipmentWarehouse('Офисный склад на Волгоградской', 'г. Москва, ул. Волгоградская, стр. 10')
+office_warehouse_name = 'Офисный склад компании "Microsoft"'
+office_warehouse_address = 'г. Москва, ул. Волгоградская, стр. 10'
+print(f'\nОткрытие склада оргтехники: {office_warehouse_name} по адресу: {office_warehouse_address}')
+office_warehouse = OfficeEquipmentWarehouse(office_warehouse_name, office_warehouse_address)
 office_counting_dep = CountingDep()
 office_personnel_service_dep = PersonnelServiceDep()
