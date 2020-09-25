@@ -35,23 +35,55 @@ class DigitalDocument(Document):
 
 
 class OfficeEquipmentWarehouse:
+    __office_equipment_type_dict = {
+        'printers': 'принтеры',
+        'scanners': 'сканеры',
+        'copiers': 'ксероксы'
+    }
+
     def __init__(self, name: str, address: str):
         self.name = name
         self.address = address
         self.resource = {
-            'printers': 0,
-            'scanners': 0,
-            'copiers': 0,
+            'printers': {},
+            'scanners': {},
+            'copiers': {},
         }
 
-    def acceptance_to_warehouse(office_equipment: OfficeEquipment):
-        pass
+    def __str__(self):
+        print('Складской запас оргтехники: ')
+        for type_en, type_rus in self._OfficeEquipmentWarehouse__office_equipment_type_dict.items():
+            print(f'{type_rus}: ')
+            for mark, mark_count in self.resource[type_en].items():
+                print(f'{mark}: {mark_count}')
 
-    def pass_from_warehouse(office_equipment: OfficeEquipment):
+
+    def acceptance_to_warehouse(self):
+        for type_en, type_rus in self._OfficeEquipmentWarehouse__office_equipment_type_dict.items():
+            type_accept = input(f'Добавить {type_rus} на склад? y - да, n - нет: ')
+            while type_accept.lower() not in ('y', 'n'):
+                type_accept = input(f'Некорректный ответ [допустимо указать y (да) либо n (нет)]. Добавить {type_rus} на склад? ')
+            if type_accept.lower() == 'n':
+                continue
+            while type_accept:
+                mark = input('Укажите модель/наименование: ')
+                count = int(input('Укажите количество (шт.): '))
+                self.resource[type_en][mark] = count
+                mark_accept = input(f'Добавить ещё модель/наименование? y - да, n - нет: ')
+                while mark_accept.lower() not in ('y', 'n'):
+                    mark_accept = input('Некорректный ответ [допустимо указать y (да) либо n (нет)].')
+                if mark_accept.lower() == 'n':
+                    break
+        self.__str__()
+
+    @classmethod
+    def pass_from_warehouse(cls):
         pass
 
 
 class OfficeEquipment:
+    type: str
+
     def __init__(self, mark: str):
         self.mark = mark
         self.state = 'off'
@@ -68,6 +100,8 @@ class OfficeEquipment:
 
 
 class Printer(OfficeEquipment):
+    type = 'printer'
+
     @staticmethod
     def print_doc(doc_path: str):
         print(f'Печать документа {doc_path}')
@@ -87,6 +121,8 @@ class Printer(OfficeEquipment):
 
 
 class Scanner(OfficeEquipment):
+    type = 'scanner'
+
     @staticmethod
     def scan_doc(doc_for_scan: PaperDocument):
         print(f'Сканирование документа {doc_for_scan.name} [{doc_for_scan.content}]')
@@ -96,6 +132,8 @@ class Scanner(OfficeEquipment):
 
 
 class Copier(OfficeEquipment):
+    type = 'copier'
+
     @staticmethod
     def copy_doc(doc_for_copy: PaperDocument):
         print(f'Копирование документа {doc_for_copy.name} [{doc_for_copy.content}]')
@@ -118,6 +156,15 @@ class PersonnelServiceDep(Department):
         super().__init__('Кадровая служба')
 
 
+office_warehouse_name = 'Офисный склад компании "Microsoft"'
+office_warehouse_address = 'г. Москва, ул. Волгоградская, стр. 10'
+print(f'\nРабота со складом оргтехники: {office_warehouse_name} по адресу: {office_warehouse_address}')
+office_warehouse = OfficeEquipmentWarehouse(office_warehouse_name, office_warehouse_address)
+office_warehouse.acceptance_to_warehouse()
+#print(office_warehouse.resource)
+office_counting_dep = CountingDep()
+office_personnel_service_dep = PersonnelServiceDep()
+
 my_paper_doc = PaperDocument('Доверенность', 'Текст доверенности')
 first_scanner = Scanner('Toshiba')
 print('\nПроверка работоспособности сканера:')
@@ -134,9 +181,3 @@ print('\nПроверка копировального аппарата: ')
 first_copier.on()
 copy_document = first_copier.copy_doc(my_paper_doc)
 first_copier.off()
-office_warehouse_name = 'Офисный склад компании "Microsoft"'
-office_warehouse_address = 'г. Москва, ул. Волгоградская, стр. 10'
-print(f'\nОткрытие склада оргтехники: {office_warehouse_name} по адресу: {office_warehouse_address}')
-office_warehouse = OfficeEquipmentWarehouse(office_warehouse_name, office_warehouse_address)
-office_counting_dep = CountingDep()
-office_personnel_service_dep = PersonnelServiceDep()
