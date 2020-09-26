@@ -34,6 +34,39 @@ class DigitalDocument(Document):
         self.__type = 'digital'
 
 
+class Department:
+    __department_equipment_type_dict = {
+        'printers': 'принтеры',
+        'scanners': 'сканеры',
+        'copiers': 'ксероксы'
+    }
+
+    def __init__(self, name: str):
+        self.name = name
+        self.resource = {
+            'printers': {},
+            'scanners': {},
+            'copiers': {},
+        }
+
+    def print_resource(self):
+        print(f'Оргтехника на балансе отдела {self.name}: ')
+        for type_en, type_rus in self.__department_equipment_type_dict.items():
+            print(f'{type_rus}: ')
+            for mark, mark_count in self.resource[type_en].items():
+                print(f'{mark}: {mark_count}')
+
+
+class CountingDep(Department):
+    def __init__(self):
+        super().__init__('Бухгалтерия')
+
+
+class PersonnelServiceDep(Department):
+    def __init__(self):
+        super().__init__('Кадровая служба')
+
+
 class OfficeEquipmentWarehouse:
     __office_equipment_type_dict = {
         'printers': 'принтеры',
@@ -52,14 +85,14 @@ class OfficeEquipmentWarehouse:
 
     def __str__(self):
         print('Складской запас оргтехники: ')
-        for type_en, type_rus in self._OfficeEquipmentWarehouse__office_equipment_type_dict.items():
+        for type_en, type_rus in self.__office_equipment_type_dict.items():
             print(f'{type_rus}: ')
             for mark, mark_count in self.resource[type_en].items():
                 print(f'{mark}: {mark_count}')
 
 
     def acceptance_to_warehouse(self):
-        for type_en, type_rus in self._OfficeEquipmentWarehouse__office_equipment_type_dict.items():
+        for type_en, type_rus in self.__office_equipment_type_dict.items():
             type_accept = input(f'Добавить {type_rus} на склад? y - да, n - нет: ')
             while type_accept.lower() not in ('y', 'n'):
                 type_accept = input(f'Некорректный ответ [допустимо указать y (да) либо n (нет)]. Добавить {type_rus} на склад? ')
@@ -76,9 +109,46 @@ class OfficeEquipmentWarehouse:
                     break
         self.__str__()
 
-    @classmethod
-    def pass_from_warehouse(cls):
-        pass
+    def pass_from_warehouse(self, dept: Department):
+        print('Доступная оргтехника для выдачи: ')
+        equipment_type_tuple = tuple(enumerate(self.__office_equipment_type_dict.items(), 1))
+        for key, value in equipment_type_tuple:
+            print(f'{key}: {value[1]}')
+        choice_type = int(input(f'Выберите нужный вариант цифрой: '))
+        while choice_type not in (1, 2, 3):
+            choice_type = int(input(f'Неверное значение! Выберите нужный вариант цифрой: '))
+        choice_type_str = equipment_type_tuple[choice_type-1][1][0]
+        if self.resource.get(choice_type_str) != {}:
+            print('Доступные модели/наименования для выбранного типа оргтехники: ')
+            equipment_mark_tuple = tuple(enumerate(self.resource.get(choice_type_str).items(), 1))
+            for key, value in equipment_mark_tuple:
+                if value[1] > 0:
+                    print(f'{key}: {value[0]}, остаток: {value[1]}')
+            choice_mark = int(input(f'Выберите нужный вариант цифрой: '))
+            while choice_mark not in range(1, len(self.resource.get(choice_type_str).keys()) + 1):
+                choice_mark = int(input(f'Неверное значение! Выберите нужный вариант цифрой: '))
+            choice_mark_str = equipment_mark_tuple[choice_mark - 1][1][0]
+            count = int(input('Укажите количество аппаратов для выдачи: '))
+            while count < 0 or count > equipment_mark_tuple[choice_mark - 1][1][1]:
+                count = int(input('Задано некорректное значение (значение должно быть больше 0 и меньше либо равно фактическому количеству аппаратов)! Укажите количество аппаратов для выдачи: '))
+            if dept.resource[choice_type_str].get(choice_mark_str) is None:
+                dept.resource[choice_type_str][choice_mark_str] = count
+            else:
+                dept.resource[choice_type_str][choice_mark_str] = dept.resource[choice_type_str].get(choice_mark_str) + count
+            self.resource[choice_type_str][choice_mark_str] = self.resource[choice_type_str].get(choice_mark_str) - count
+            print('\nОргтехника выдана в отдел. Проверка выдачи:')
+            self.__str__()
+            dept.print_resource()
+        else:
+            print('Аппаратов данного типа оргтехники нет на складе')
+
+
+class Company:
+    def __init__(self, company_name: str, company_address: str, departments_tuple: tuple, warehouse: OfficeEquipmentWarehouse):
+        self.company = company_name
+        self.address = company_address
+        self.departments = departments_tuple
+        self.warehouse = warehouse
 
 
 class OfficeEquipment:
@@ -141,30 +211,21 @@ class Copier(OfficeEquipment):
         print(f'Копирование завершено. Получен документ {copy_doc.name} [{copy_doc.content}]')
         return copy_doc
 
-class Department:
-    def __init__(self, name: str):
-        self.name = name
-
-
-class CountingDep(Department):
-    def __init__(self):
-        super().__init__('Бухгалтерия')
-
-
-class PersonnelServiceDep(Department):
-    def __init__(self):
-        super().__init__('Кадровая служба')
-
-
-office_warehouse_name = 'Офисный склад компании "Microsoft"'
-office_warehouse_address = 'г. Москва, ул. Волгоградская, стр. 10'
-print(f'\nРабота со складом оргтехники: {office_warehouse_name} по адресу: {office_warehouse_address}')
-office_warehouse = OfficeEquipmentWarehouse(office_warehouse_name, office_warehouse_address)
-office_warehouse.acceptance_to_warehouse()
-#print(office_warehouse.resource)
 office_counting_dep = CountingDep()
 office_personnel_service_dep = PersonnelServiceDep()
+office_warehouse_name = 'Офисный склад компании "Microsoft"'
+office_warehouse_address = 'г. Москва, ул. Волгоградская, стр. 10'
+office_warehouse = OfficeEquipmentWarehouse(office_warehouse_name, office_warehouse_address)
+main_company = Company('Microsoft', 'г. Москва, Крылатский проспект, стр. 20/2', (office_counting_dep, office_personnel_service_dep), office_warehouse)
 
+print(f'\nРабота со складом оргтехники: {office_warehouse_name} по адресу: {office_warehouse_address}')
+office_warehouse.acceptance_to_warehouse()
+print('\nВыдача оргтехники со склада для Бухгалтерии: ')
+office_warehouse.pass_from_warehouse(office_counting_dep)
+print('\nВыдача оргтехники со склада для Кадровой службы: ')
+office_warehouse.pass_from_warehouse(office_personnel_service_dep)
+
+print('\nПлановое выборочное тестирование работы оргтехники на складе:')
 my_paper_doc = PaperDocument('Доверенность', 'Текст доверенности')
 first_scanner = Scanner('Toshiba')
 print('\nПроверка работоспособности сканера:')
