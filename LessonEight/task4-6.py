@@ -367,7 +367,7 @@ office_warehouse.pass_from_warehouse_to_department(office_personnel_service_dep)
 print('\nСдача оргтехники из отдела Бухгалтерии на склад: ')
 office_warehouse.put_from_department_to_warehouse(office_counting_dep)
 
-print('\nПлановое выборочное тестирование работы оргтехники на складе:')
+print('\nТестирование работы оргтехники:')
 my_paper_doc = PaperDocument('Доверенность', 'Текст доверенности')
 first_scanner = Scanner('Toshiba')
 print('\nПроверка работоспособности сканера:')
