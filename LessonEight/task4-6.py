@@ -115,7 +115,7 @@ class OfficeEquipmentWarehouse:
                 validate_ok = False
                 count = 0
                 while not validate_ok:
-                    count_str = input('Укажите количество (шт.) (значение должно быть больше либо равно 1: ')
+                    count_str = input('Укажите количество (шт.) (значение должно быть больше либо равно 1): ')
                     try:
                         if ValidateTypeError.check_user_input(count_str):
                             count = abs(int(count_str))
