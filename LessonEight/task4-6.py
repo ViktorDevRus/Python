@@ -47,7 +47,7 @@ class DigitalDocument(Document):
 
 
 class Department:
-    __department_equipment_type_dict = {
+    department_equipment_type_dict = {
         'printers': 'принтеры',
         'scanners': 'сканеры',
         'copiers': 'ксероксы'
@@ -63,7 +63,7 @@ class Department:
 
     def print_resource(self):
         print(f'Оргтехника на балансе отдела {self.name}: ')
-        for type_en, type_rus in self.__department_equipment_type_dict.items():
+        for type_en, type_rus in self.department_equipment_type_dict.items():
             print(f'{type_rus}: ')
             for mark, mark_count in self.resource[type_en].items():
                 print(f'{mark}: {mark_count}')
@@ -103,7 +103,7 @@ class OfficeEquipmentWarehouse:
                 print(f'{mark}: {mark_count}')
 
 
-    def acceptance_to_warehouse(self):
+    def acceptance_of_purchased_office_equipment_to_warehouse(self):
         for type_en, type_rus in self.__office_equipment_type_dict.items():
             type_accept = input(f'Добавить {type_rus} на склад? y - да, n - нет: ')
             while type_accept.lower() not in ('y', 'n'):
@@ -115,12 +115,15 @@ class OfficeEquipmentWarehouse:
                 validate_ok = False
                 count = 0
                 while not validate_ok:
-                    count_str = input('Укажите количество (шт.): ')
+                    count_str = input('Укажите количество (шт.) (значение должно быть больше либо равно 1: ')
                     try:
                         if ValidateTypeError.check_user_input(count_str):
                             count = abs(int(count_str))
-                            validate_ok = True
-                            break
+                            if count >= 1:
+                                validate_ok = True
+                                break
+                            else:
+                                print('Неверное значение! ', end='')
                     except ValidateTypeError as error_obj:
                         print(error_obj.txt)
                         continue
@@ -133,7 +136,7 @@ class OfficeEquipmentWarehouse:
         print('Добавление завершено.')
         self.__str__()
 
-    def pass_from_warehouse(self, dept: Department):
+    def pass_from_warehouse_to_department(self, dept: Department):
         print('Доступная оргтехника для выдачи: ')
         equipment_type_tuple = tuple(enumerate(self.__office_equipment_type_dict.items(), 1))
         for key, value in equipment_type_tuple:
@@ -179,7 +182,7 @@ class OfficeEquipmentWarehouse:
             validate_ok = False
             count = 0
             while not validate_ok:
-                count_input = input('Укажите количество аппаратов для выдачи (значение должно быть больше 1 и меньше либо равно фактическому количеству аппаратов): ')
+                count_input = input('Укажите количество аппаратов для выдачи (значение должно быть больше либо равно 1 и меньше либо равно фактическому количеству аппаратов): ')
                 try:
                     if ValidateTypeError.check_user_input(count_input):
                         count = abs(int(count_input))
@@ -196,11 +199,81 @@ class OfficeEquipmentWarehouse:
             else:
                 dept.resource[choice_type_str][choice_mark_str] = dept.resource[choice_type_str].get(choice_mark_str) + count
             self.resource[choice_type_str][choice_mark_str] = self.resource[choice_type_str].get(choice_mark_str) - count
-            print('\nОргтехника выдана в отдел. Проверка выдачи:')
+            print('Оргтехника выдана в отдел. Проверка выдачи:')
             self.__str__()
             dept.print_resource()
         else:
             print('Аппаратов данного типа оргтехники нет на складе')
+
+
+    def put_from_department_to_warehouse(self, dept: Department):
+        print('Доступная оргтехника для сдачи на склад: ')
+        equipment_type_tuple = tuple(enumerate(dept.department_equipment_type_dict.items(), 1))
+        for key, value in equipment_type_tuple:
+            print(f'{key}: {value[1]}')
+        validate_ok = False
+        choice_type = 0
+        while not validate_ok:
+            choice_type_input = input('Выберите нужный вариант цифрой: ')
+            try:
+                if ValidateTypeError.check_user_input(choice_type_input):
+                    choice_type = abs(int(choice_type_input))
+                    if choice_type  in range(1, len(dept.resource.keys()) + 1):
+                        validate_ok = True
+                        break
+                    else:
+                        print('Неверное значение! ', end='')
+            except ValidateTypeError as error_obj:
+                print(error_obj.txt)
+                continue
+        choice_type_str = equipment_type_tuple[choice_type-1][1][0]
+        if dept.resource.get(choice_type_str) != {}:
+            print('Доступные модели/наименования для выбранного типа оргтехники: ')
+            equipment_mark_tuple = tuple(enumerate(dept.resource.get(choice_type_str).items(), 1))
+            for key, value in equipment_mark_tuple:
+                if value[1] > 0:
+                    print(f'{key}: {value[0]}, остаток: {value[1]}')
+            validate_ok = False
+            choice_mark = 0
+            while not validate_ok:
+                choice_mark_input = input('Выберите нужный вариант цифрой: ')
+                try:
+                    if ValidateTypeError.check_user_input(choice_mark_input):
+                        choice_mark = abs(int(choice_mark_input))
+                        if choice_mark in range(1, len(dept.resource.get(choice_type_str).keys()) + 1):
+                            validate_ok = True
+                            break
+                        else:
+                            print('Неверное значение! ', end='')
+                except ValidateTypeError as error_obj:
+                    print(error_obj.txt)
+                    continue
+            choice_mark_str = equipment_mark_tuple[choice_mark - 1][1][0]
+            validate_ok = False
+            count = 0
+            while not validate_ok:
+                count_input = input('Укажите количество аппаратов для сдачи на склад (значение должно быть больше либо равно 1 и меньше либо равно фактическому количеству аппаратов): ')
+                try:
+                    if ValidateTypeError.check_user_input(count_input):
+                        count = abs(int(count_input))
+                        if count in range(1, equipment_mark_tuple[choice_mark - 1][1][1] + 1):
+                            validate_ok = True
+                            break
+                        else:
+                            print('Неверное значение! ', end='')
+                except ValidateTypeError as error_obj:
+                    print(error_obj.txt)
+                    continue
+            if self.resource[choice_type_str].get(choice_mark_str) is None:
+                self.resource[choice_type_str][choice_mark_str] = count
+            else:
+                self.resource[choice_type_str][choice_mark_str] = self.resource[choice_type_str].get(choice_mark_str) + count
+            dept.resource[choice_type_str][choice_mark_str] = dept.resource[choice_type_str].get(choice_mark_str) - count
+            print('Оргтехнику сдали на склад. Проверка операции:')
+            dept.print_resource()
+            self.__str__()
+        else:
+            print('Аппаратов данного типа оргтехники нет на балансе отдела')
 
 
 class Company:
@@ -279,12 +352,14 @@ office_warehouse = OfficeEquipmentWarehouse(office_warehouse_name, office_wareho
 main_company = Company('Microsoft', 'г. Москва, Крылатский проспект, стр. 20/2', (office_counting_dep, office_personnel_service_dep), office_warehouse)
 
 print(f'\nРабота со складом оргтехники: {office_warehouse_name} по адресу: {office_warehouse_address}')
-print('Приём оргтехники на склад:')
-office_warehouse.acceptance_to_warehouse()
+print('Приём купленной оргтехники на склад:')
+office_warehouse.acceptance_of_purchased_office_equipment_to_warehouse()
 print('\nВыдача оргтехники со склада для Бухгалтерии: ')
-office_warehouse.pass_from_warehouse(office_counting_dep)
+office_warehouse.pass_from_warehouse_to_department(office_counting_dep)
 print('\nВыдача оргтехники со склада для Кадровой службы: ')
-office_warehouse.pass_from_warehouse(office_personnel_service_dep)
+office_warehouse.pass_from_warehouse_to_department(office_personnel_service_dep)
+print('\nСдача оргтехники из отдела Бухгалтерии на склад: ')
+office_warehouse.put_from_department_to_warehouse(office_counting_dep)
 
 print('\nПлановое выборочное тестирование работы оргтехники на складе:')
 my_paper_doc = PaperDocument('Доверенность', 'Текст доверенности')
