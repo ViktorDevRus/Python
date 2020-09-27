@@ -198,7 +198,10 @@ class OfficeEquipmentWarehouse:
                 dept.resource[choice_type_str][choice_mark_str] = count
             else:
                 dept.resource[choice_type_str][choice_mark_str] = dept.resource[choice_type_str].get(choice_mark_str) + count
-            self.resource[choice_type_str][choice_mark_str] = self.resource[choice_type_str].get(choice_mark_str) - count
+            if (self.resource[choice_type_str].get(choice_mark_str) - count) > 0:
+                self.resource[choice_type_str][choice_mark_str] = self.resource[choice_type_str].get(choice_mark_str) - count
+            else:
+                self.resource[choice_type_str].pop(choice_mark_str)
             print('Оргтехника выдана в отдел. Проверка выдачи:')
             self.__str__()
             dept.print_resource()
@@ -268,7 +271,10 @@ class OfficeEquipmentWarehouse:
                 self.resource[choice_type_str][choice_mark_str] = count
             else:
                 self.resource[choice_type_str][choice_mark_str] = self.resource[choice_type_str].get(choice_mark_str) + count
-            dept.resource[choice_type_str][choice_mark_str] = dept.resource[choice_type_str].get(choice_mark_str) - count
+            if (dept.resource[choice_type_str].get(choice_mark_str) - count) > 0:
+                dept.resource[choice_type_str][choice_mark_str] = dept.resource[choice_type_str].get(choice_mark_str) - count
+            else:
+                dept.resource[choice_type_str].pop(choice_mark_str)
             print('Оргтехнику сдали на склад. Проверка операции:')
             dept.print_resource()
             self.__str__()
