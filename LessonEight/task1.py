@@ -24,7 +24,7 @@ class Date:
             return Date.day, Date.month, Date.year
         except ValueError as err:
             print(f'Неверный формат даты либо задано некорректное значение для параметра/аргумента (не число). Ошибка на этапе преобразования типов: {err}')
-            return None
+            
 
     @staticmethod
     def validate_date(param_day, param_month, param_year):
@@ -38,7 +38,7 @@ class Date:
             'Год невалиден (задан некорректно)')
         except ValueError as err:
             print(f'Некорректное значение для параметра/аргумента (не число). Ошибка на этапе преобразования типов: {err}')
-            return None
+            
         else:
             print('Валидация завершена.')
 
