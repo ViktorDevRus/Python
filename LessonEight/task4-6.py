@@ -102,6 +102,7 @@ class OfficeEquipmentWarehouse:
             for mark, mark_count in self.resource[type_en].items():
                 print(f'{mark}: {mark_count}')
 
+            
 
     def acceptance_of_purchased_office_equipment_to_warehouse(self):
         for type_en, type_rus in self.__office_equipment_type_dict.items():
@@ -136,6 +137,8 @@ class OfficeEquipmentWarehouse:
         print('Добавление завершено.')
         self.__str__()
 
+        
+        
     def pass_from_warehouse_to_department(self, dept: Department):
         print('Доступная оргтехника для выдачи: ')
         equipment_type_tuple = tuple(enumerate(self.__office_equipment_type_dict.items(), 1))
@@ -208,6 +211,7 @@ class OfficeEquipmentWarehouse:
         else:
             print('Аппаратов данного типа оргтехники нет на складе')
 
+          
 
     def put_from_department_to_warehouse(self, dept: Department):
         print('Доступная оргтехника для сдачи на склад: ')
@@ -281,6 +285,7 @@ class OfficeEquipmentWarehouse:
         else:
             print('Аппаратов данного типа оргтехники нет на балансе отдела')
 
+          
 
 class Company:
     def __init__(self, company_name: str, company_address: str, departments_tuple: tuple, warehouse: OfficeEquipmentWarehouse):
@@ -350,12 +355,14 @@ class Copier(OfficeEquipment):
         print(f'Копирование завершено. Получен документ {copy_doc.name} [{copy_doc.content}]')
         return copy_doc
 
+       
 office_counting_dep = CountingDep()
 office_personnel_service_dep = PersonnelServiceDep()
 office_warehouse_name = 'Офисный склад компании "Microsoft"'
 office_warehouse_address = 'г. Москва, ул. Волгоградская, стр. 10'
 office_warehouse = OfficeEquipmentWarehouse(office_warehouse_name, office_warehouse_address)
 main_company = Company('Microsoft', 'г. Москва, Крылатский проспект, стр. 20/2', (office_counting_dep, office_personnel_service_dep), office_warehouse)
+
 
 print(f'\nРабота со складом оргтехники: {office_warehouse_name} по адресу: {office_warehouse_address}')
 print('Приём купленной оргтехники на склад:')
@@ -366,6 +373,7 @@ print('\nВыдача оргтехники со склада для Кадров
 office_warehouse.pass_from_warehouse_to_department(office_personnel_service_dep)
 print('\nСдача оргтехники из отдела Бухгалтерии на склад: ')
 office_warehouse.put_from_department_to_warehouse(office_counting_dep)
+
 
 print('\nТестирование работы оргтехники:')
 my_paper_doc = PaperDocument('Доверенность', 'Текст доверенности')
